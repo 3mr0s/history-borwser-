@@ -1,0 +1,99 @@
+#include <iostream>
+#include <stack>
+#include <string>
+
+using namespace std;
+
+class Browser {
+private:
+    stack<string> backStack;
+    stack<string> forwardStack;
+    string current;
+
+public:
+    Browser() {
+        current = "Home";
+    }
+
+    void visitPage(const string& page) {
+        backStack.push(current);
+        current = page;
+        while (!forwardStack.empty()) {
+            forwardStack.pop();
+        }
+        cout << "Visited: " << current << endl;
+    }
+
+    void goBack() {
+        if (backStack.empty()) {
+            cout << "No pages to go back to.\n";
+            return;
+        }
+        forwardStack.push(current);
+        current = backStack.top();
+        backStack.pop();
+        cout << "Went back to: " << current << endl;
+    }
+
+    void goForward() {
+        if (forwardStack.empty()) {
+            cout << "No pages to go forward to.\n";
+            return;
+        }
+        backStack.push(current);
+        current = forwardStack.top();
+        forwardStack.pop();
+        cout << "Went forward to: " << current << endl;
+    }
+
+    void showCurrentPage() {
+        cout << "Current Page: " << current << endl;
+    }
+
+    void showMenu() {
+        cout << "\n===== Browser Menu =====\n";
+        cout << "1. Visit new page\n";
+        cout << "2. Go back\n";
+        cout << "3. Go forward\n";
+        cout << "4. Show current page\n";
+        cout << "0. Exit\n";
+        cout << "========================\n";
+        cout << "Enter your choice: ";
+    }
+};
+
+int main() {
+    Browser myBrowser;
+    int choice;
+    string page;
+
+    do {
+        myBrowser.showMenu();
+        cin >> choice;
+
+        switch (choice) {
+            case 1:
+                cout << "Enter page URL or name: ";
+                cin >> page;
+                myBrowser.visitPage(page);
+                break;
+            case 2:
+                myBrowser.goBack();
+                break;
+            case 3:
+                myBrowser.goForward();
+                break;
+            case 4:
+                myBrowser.showCurrentPage();
+                break;
+            case 0:
+                cout << "Exiting browser simulation.\n";
+                break;
+            default:
+                cout << "Invalid choice. Try again.\n";
+        }
+
+    } while (choice != 0);
+
+    return 0;
+}
